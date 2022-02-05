@@ -1,0 +1,23 @@
+title 0.4 Add Note
+
+Browser->Server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+note over Server:
+Add new note to note table
+end note
+Server->Browser: HTTP 302/REDIRECT to https://studies.cs.helsinki.fi/exampleapp/notes
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+Server-->Browser: HTML document
+note over Browser:
+Browser makes additional resource 
+requests based on the HTML document
+end note
+Browser->Server: HTML GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Browser->Server: HTML GET https://studies.cs.helsinki.fi/exampleapp/main.js
+Server-->Browser: main.css document
+Server-->Browser: main.js document
+note over Browser:
+Browser makes additional resource 
+request based on the main.js document
+end note
+Browser->Server: HTML GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Server-->Browser: data.json document

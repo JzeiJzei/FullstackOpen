@@ -1,0 +1,18 @@
+title 0.5 SPA
+
+Browser->Server: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+Server-->Browser: HTML document
+note over Browser:
+Browser makes additional resource 
+requests based on the HTML document
+end note
+Browser->Server: HTML GET https://studies.cs.helsinki.fi/exampleapp/main.css
+Browser->Server: HTML GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+Server-->Browser: main.css document
+Server-->Browser: spa.js document
+note over Browser:
+Browser makes additional resource 
+request based on the spa.js document
+end note
+Browser->Server: HTML GET https://studies.cs.helsinki.fi/exampleapp/data.json
+Server-->Browser: data.json document
