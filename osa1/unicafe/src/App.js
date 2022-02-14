@@ -8,12 +8,12 @@ const Statistics = ({good, neutral, bad}) => {
     return(
       <>
         <h2>Statistics</h2>
-        <p>Good {good}</p> 
-        <p>Neutral {neutral}</p> 
-        <p>Bad {bad}</p>
-        <p>All {all}</p>
-        <p>Average {(good - bad)/all}</p>
-        <p>Positive {(good/all)*100}%</p>
+        <StatisticLine text="Good" value={good} />
+        <StatisticLine text="Neutral" value={neutral} />
+        <StatisticLine text="Bad" value={bad} />
+        <StatisticLine text="All" value={all} />
+        <StatisticLine text="Average" value={(good - bad)/all} />
+        <StatisticLine text="Positive" value={((good/all)*100) + "%"} />
       </>
     )
   } else {
@@ -26,6 +26,22 @@ const Statistics = ({good, neutral, bad}) => {
   
 }
 
+const StatisticLine = ({text, value}) => {
+  return(
+    <>
+      <p>{text} {value}</p>
+    </>
+  )
+}
+
+const Button = ({text, func}) => {
+  return(
+    <>
+      <button onClick={func}>{text}</button>
+    </>
+  )
+}
+
 const App = () => {
   // tallenna napit omaan tilaansa
   const [good, setGood] = useState(0)
@@ -35,9 +51,9 @@ const App = () => {
   return (
     <div>
       <h1>Give feedback</h1>
-      <button onClick={()=>{setGood(good+1)}}>good</button>
-      <button onClick={()=>{setNeutral(neutral+1)}}>neutral</button>
-      <button onClick={()=>{setBad(bad+1)}}>bad</button>
+      <Button func={()=>{setGood(good+1)}} text="Good" />
+      <Button func={()=>{setNeutral(neutral+1)}} text="Neutral" />
+      <Button func={()=>{setBad(bad+1)}} text="Bad"/>
       <Statistics good={good} neutral={neutral} bad={bad}/>
     </div>
   )
