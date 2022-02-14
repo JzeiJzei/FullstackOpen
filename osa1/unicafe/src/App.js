@@ -7,13 +7,21 @@ const Statistics = ({good, neutral, bad}) => {
   if(all > 0){
     return(
       <>
-        <h2>Statistics</h2>
-        <StatisticLine text="Good" value={good} />
-        <StatisticLine text="Neutral" value={neutral} />
-        <StatisticLine text="Bad" value={bad} />
-        <StatisticLine text="All" value={all} />
-        <StatisticLine text="Average" value={(good - bad)/all} />
-        <StatisticLine text="Positive" value={((good/all)*100) + "%"} />
+        <table>
+          <thead>
+            <tr>
+              <th>Statistics</th>
+            </tr>
+          </thead>
+          <tbody>
+            <StatisticLine text="Good" value={good} />
+            <StatisticLine text="Neutral" value={neutral} />
+            <StatisticLine text="Bad" value={bad} />
+            <StatisticLine text="All" value={all} />
+            <StatisticLine text="Average" value={(good - bad)/all} />
+            <StatisticLine text="Positive" value={((good/all)*100) + "%"} />
+          </tbody>
+        </table>
       </>
     )
   } else {
@@ -29,7 +37,10 @@ const Statistics = ({good, neutral, bad}) => {
 const StatisticLine = ({text, value}) => {
   return(
     <>
-      <p>{text} {value}</p>
+      <tr>
+        <th>{text}</th>
+        <td>{value}</td>
+      </tr>
     </>
   )
 }
