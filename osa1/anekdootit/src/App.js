@@ -19,6 +19,20 @@ const App = () => {
     return Math.floor(Math.random() * (max-min) ) + min;
   }
 
+  function getMaxIndexOfArray (array) {
+    let maxValue = array[0];
+    let maxIndex = 0;
+
+    for (let i = 0; i < array.length; i++) {
+      if (array[i] > maxValue){
+        maxIndex = i;
+        maxValue = array[i];
+      }
+    }
+
+    return maxIndex
+  }
+
   const setRandomAnecdote = (random) => {
     setSelected(random);
   }
@@ -28,6 +42,8 @@ const App = () => {
       copyPoints[selected] += 1;
       setPoints(copyPoints);
   }
+
+  const mostPoints = getMaxIndexOfArray(points);
   
 
   return (
@@ -37,6 +53,9 @@ const App = () => {
       <p>has {points[selected]} votes</p>
       <button onClick={handleVote}>Vote</button>
       <button onClick={() => setRandomAnecdote(getInteger(0,anecdotes.length))}>Anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[mostPoints]}</p>
+      <p>has {points[mostPoints]} votes</p>
     </div>
   )
 }
