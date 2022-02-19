@@ -13,13 +13,20 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Uint8Array([1,3,4,6,2,5,7]))  //Set random positive values for testing
 
   function getInteger(min, max){
     return Math.floor(Math.random() * (max-min) ) + min;
   }
 
-  const setRandomAnecdote = () => {
-    setSelected(getInteger(0,anecdotes.length));
+  const setRandomAnecdote = (random) => {
+    setSelected(random);
+  }
+
+  const handleVote = () => {
+      let copyPoints = [...points]
+      copyPoints[selected] += 1;
+      setPoints(copyPoints);
   }
   
 
@@ -27,9 +34,9 @@ const App = () => {
     <div>
       <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
-      <button onClick={() => setRandomAnecdote()}>Anecdote</button>
-      
-      
+      <p>has {points[selected]} votes</p>
+      <button onClick={handleVote}>Vote</button>
+      <button onClick={() => setRandomAnecdote(getInteger(0,anecdotes.length))}>Anecdote</button>
     </div>
   )
 }
