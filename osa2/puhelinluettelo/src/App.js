@@ -52,6 +52,11 @@ const App = () => {
       //console.log(event.target)
     }
 
+    axios
+      .post('http://localhost:3001/persons', person)
+      .then( response => console.log(response))
+      .catch( error => console.log(error))
+
     setNewNumber('')
     setNewName('')
   }
