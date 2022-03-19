@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import notes from './services/notes';
 
 const Filter = ({filter, handleFilter, persons}) => (
   <>
@@ -26,9 +27,9 @@ const PersonForm = ({addPerson, newName, handleNameChange, newNumber, handleNumb
   </>
 )
 
-const People = ({persons}) => (
+const People = ({persons, deletePerson}) => (
   <>
-    {persons.map( person => <div key={person.name}>{person.name} {person.number}</div> )}
+    {persons.map( person => <div key={person.name}>{person.name} {person.number} <button id={person.id} name={person.name} onClick={deletePerson}>delete</button></div> )}
   </>
 )
 
@@ -42,24 +43,42 @@ const App = () => {
     event.preventDefault()
     const person = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: (persons.length + 1) // Add id key to avoid missing id on element
     }
 
     if (persons.filter(obj => obj.name === person.name).length > 0) {
       alert(`${person.name} is already added to the phonebook`)
     } else {
       setPersons(persons.concat(person))
-      //console.log(event.target)
-    }
 
-    axios
+      axios
       .post('http://localhost:3001/persons', person)
       .then( response => console.log(response))
       .catch( error => console.log(error))
+      //console.log(event.target)
+    }
 
     setNewNumber('')
     setNewName('')
   }
+
+  const deletePerson = async (event) => {
+
+    //Delete resource after confirmation
+    if(window.confirm(`Delete ${event.target.name}?`) === true){
+      try{
+        await notes.deleteResource(event.target.id)
+              .then(res => console.log(res))
+        //we need to wait for previous request to execute...
+        notes.getAll()
+              .then(response => setPersons(response.data))
+      }catch (error){
+        console.log(error)
+      }
+    }
+  }
+
 
   const handleNameChange = (event) => {
     //console.log(event.target.value)
@@ -92,7 +111,7 @@ const App = () => {
       <h3>Add a contact</h3>
       <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <People persons={persons}/>
+      <People persons={persons} deletePerson={deletePerson}/>
     </div>
   )
 }
