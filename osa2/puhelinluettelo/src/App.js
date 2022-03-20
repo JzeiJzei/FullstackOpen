@@ -4,14 +4,36 @@ import axios from 'axios'
 import notes from './services/notes';
 
 const Filter = ({filter, handleFilter, persons}) => (
-  <>
-    <p>Filter contacts with:</p><input value={filter} onChange={handleFilter}></input>
+  <div className='margin-top'>
+    <p>Filter contacts with:</p><input className='margin-bottom' value={filter} onChange={handleFilter}></input>
     <h4>Filter results:</h4>
     {filter === '' ? <p>No results - Type above to find people.</p> :
     persons.filter( person => person.name.toLowerCase().includes(filter.toLowerCase()) === true )
             .map( per => <div key={per.name}>{per.name} {per.number}</div> )}
-  </>
+  </div>
 )
+
+const Notification = ({message, successful}) => {
+  if (message === null || message === '') {
+    return null
+  }
+
+  if (successful){
+    return (
+      <div className="success margin-top">
+        {message}
+      </div>
+    )
+  } else {
+    return (
+      <div className="error margin-top">
+        {message}
+      </div>
+    )
+  }
+
+
+}
 
 const PersonForm = ({addPerson, newName, handleNameChange, newNumber, handleNumberChange}) => (
   <>
@@ -38,6 +60,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [successful, setSuccessful] = useState(false)
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -50,6 +74,9 @@ const App = () => {
     if (persons.filter(obj => obj.name === person.name).length > 0) {
         if (window.confirm(`${person.name} is already added to the phonebook, replace the old number with a new one?`) === true) {
         updatePerson(person)
+        setSuccessful(true)
+        setErrorMessage(`Replaced ${person.name}'s number`)
+        infoTimer(5000)
       }
     } else {
       setPersons(persons.concat(person))
@@ -59,6 +86,10 @@ const App = () => {
       .then( response => console.log(response))
       .catch( error => console.log(error))
       //console.log(event.target)
+
+      setSuccessful(true)
+      setErrorMessage(`Added ${person.name}`)
+      infoTimer(5000)
     }
 
     setNewNumber('')
@@ -84,10 +115,19 @@ const App = () => {
         //we need to wait for previous request to execute...
         notes.getAll()
               .then(response => setPersons(response.data))
+        setSuccessful(true)
+        setErrorMessage(`Deleted ${event.target.name} from Phonebook.`)
+        infoTimer(5000)
       }catch (error){
         console.log(error)
       }
     }
+  }
+
+  const infoTimer = (milliseconds) => {
+    setTimeout(() => {
+      setErrorMessage(null)        
+    }, milliseconds)
   }
 
   const handleNameChange = (event) => {
@@ -115,13 +155,14 @@ const App = () => {
   }, [])
 
   return (
-    <div>
-      <h2>Phonebook</h2>
+    <div className='padding-left margin-top'>
+      <h1>Phonebook</h1>
       <Filter filter={filter} handleFilter={handleFilter} persons={persons}/>
-      <h3>Add a contact</h3>
+      <Notification message={errorMessage} successful={successful} />
+      <h3 className='margin-top margin-bottom'>Add a contact</h3>
       <PersonForm addPerson={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
-      <h2>Numbers</h2>
-      <People persons={persons} deletePerson={deletePerson}/>
+      <h2 className='margin-top margin-bottom'>Numbers</h2>
+      <People  persons={persons} deletePerson={deletePerson}/>
     </div>
   )
 }
