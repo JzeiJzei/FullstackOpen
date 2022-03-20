@@ -48,7 +48,9 @@ const App = () => {
     }
 
     if (persons.filter(obj => obj.name === person.name).length > 0) {
-      alert(`${person.name} is already added to the phonebook`)
+        if (window.confirm(`${person.name} is already added to the phonebook, replace the old number with a new one?`) === true) {
+        updatePerson(person)
+      }
     } else {
       setPersons(persons.concat(person))
 
@@ -61,6 +63,15 @@ const App = () => {
 
     setNewNumber('')
     setNewName('')
+  }
+
+  const updatePerson = async (person) => {
+    let id = await notes.getIDbyName(person.name).then(res => {return res});
+    const newDetails = {...person, id: id }
+    await notes.update(id, newDetails)
+        .then(res => console.log(res))
+    await notes.getAll()
+        .then(response => setPersons(response.data))
   }
 
   const deletePerson = async (event) => {
@@ -78,7 +89,6 @@ const App = () => {
       }
     }
   }
-
 
   const handleNameChange = (event) => {
     //console.log(event.target.value)

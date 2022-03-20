@@ -5,6 +5,10 @@ const getAll = () => {
   return axios.get(baseUrl)
 }
 
+const getIDbyName = (name) => {
+  return axios.get(baseUrl, {params: {name: name}}).then(res => res.data[0].id)
+}
+
 const create = (newObject) => {
   return axios.post(baseUrl, newObject)
 }
@@ -19,6 +23,7 @@ const deleteResource = (id) => {
 
 export default {
   getAll,
+  getIDbyName,
   create,
   update,
   deleteResource
