@@ -97,7 +97,16 @@ const App = () => {
   }
 
   const updatePerson = async (person) => {
-    let id = await notes.getIDbyName(person.name).then(res => {return res});
+    let id = await notes.getIDbyName(person.name)
+                  .then(res => {return res})
+                  .catch( error => {
+                    console.log(error)
+                    setSuccessful(false)
+                    setErrorMessage(`Information of ${person.name} has already been removed from the server`)
+                    infoTimer(5000)
+                    notes.getAll()
+                    .then(response => setPersons(response.data))
+                  });
     const newDetails = {...person, id: id }
     await notes.update(id, newDetails)
         .then(res => console.log(res))
